@@ -65,6 +65,7 @@ ALL_TEST_NAMES=(
     "VSCodeTestVariables"
     "VSCodeTestEvaluate"
     "VSCodeTestStepping"
+    "VSCodeTestSymbollessStepping"
     "VSCodeTestEnv"
     "VSCodeTestExitCode"
     "VSCodeTestEvalNotEnglish"
