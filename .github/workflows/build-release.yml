@@ -41,6 +41,14 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.303
+      - name: Warm up the .NET CLI
+        # The parallel build launches several `dotnet` processes at once
+        # (generrmsg, ManagedPart, the project scaffold). The CLI's first-run
+        # configuration takes the NuGet-Migrations mutex, which raced between
+        # them on linux-arm64 (EEXIST under /tmp/.dotnet/shm) and failed the
+        # build. One serial invocation completes it before the race can start.
+        shell: bash
+        run: dotnet nuget locals all --list >/dev/null
       - name: Fetch the pinned CoreCLR sources
         shell: bash
         run: |-
