@@ -55,6 +55,7 @@ namespace NetcoreDbgTest.VSCode
         public bool ?enableStepFiltering;
         public string internalConsoleOptions;
         public string __sessionId;
+        public bool ?hotReload;
     }
 
     public class AttachRequest : Request {
@@ -325,6 +326,22 @@ namespace NetcoreDbgTest.VSCode
 
     public class StepOutArguments {
         public int threadId;
+    }
+
+    public class ApplyDeltasRequest : Request {
+        public ApplyDeltasRequest()
+        {
+            command = "applyDeltas";
+        }
+        public ApplyDeltasArguments arguments = new ApplyDeltasArguments();
+    }
+
+    public class ApplyDeltasArguments {
+        public string dllFileName;
+        public string metadataDeltaFile;
+        public string ilDeltaFile;
+        public string pdbDeltaFile;
+        public string lineUpdatesFile;
     }
 
     public class SetExceptionBreakpointsRequest : Request {

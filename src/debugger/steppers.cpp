@@ -83,7 +83,13 @@ HRESULT Steppers::SetupStep(ICorDebugThread *pThread, IDebugger::StepType stepTy
         return E_FAIL;
 
     ULONG32 ilOffset;
-    IfFailRet(m_sharedModules->GetFrameILAndSequencePoint(pFrame, ilOffset, m_StepStartSP));
+    // [CONFIG-DEBUG-EXCEPTIONS] A first-chance throw can stop inside a
+    // library without symbols. The CLR can still step through its handler.
+    if (FAILED(m_sharedModules->GetFrameILAndSequencePoint(pFrame, ilOffset, m_StepStartSP)))
+    {
+        m_StepStartSP = {};
+        return m_simpleStepper->SetupStep(pThread, stepType);
+    }
 
     IfFailRet(m_asyncStepper->SetupStep(pThread, stepType));
     if (Status == S_OK) // S_FALSE = setup simple stepper
