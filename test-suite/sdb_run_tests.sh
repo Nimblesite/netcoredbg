@@ -73,6 +73,7 @@ ALL_TEST_NAMES=(
     "MITestHotReloadJMC"
     "MITestHotReloadWithoutBreak"
     "MITestHotReloadPDB"
+    "VSCodeTestHotReload"
     "MITestHotReloadUpdate"
     "MITestGeneric"
     "MITestEvalArraysIndexers"
@@ -275,6 +276,9 @@ for TEST_NAME in $TEST_NAMES; do
     then
         TEST_PROJ_NAME="TestAppHotReloadUpdate"
     elif  [[ $TEST_NAME == MITestHotReload* ]] ;
+    then
+        TEST_PROJ_NAME="TestAppHotReload"
+    elif  [[ $TEST_NAME == VSCodeTestHotReload ]] ;
     then
         TEST_PROJ_NAME="TestAppHotReload"
     fi
