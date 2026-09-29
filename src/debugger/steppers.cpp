@@ -83,7 +83,13 @@ HRESULT Steppers::SetupStep(ICorDebugThread *pThread, IDebugger::StepType stepTy
         return E_FAIL;
 
     ULONG32 ilOffset;
-    IfFailRet(m_sharedModules->GetFrameILAndSequencePoint(pFrame, ilOffset, m_StepStartSP));
+    // A first-chance exception can stop the debuggee inside a module without symbols.
+    // The CLR can still step through such a frame, so fall back to the simple stepper.
+    if (FAILED(m_sharedModules->GetFrameILAndSequencePoint(pFrame, ilOffset, m_StepStartSP)))
+    {
+        m_StepStartSP = {};
+        return m_simpleStepper->SetupStep(pThread, stepType);
+    }
 
     IfFailRet(m_asyncStepper->SetupStep(pThread, stepType));
     if (Status == S_OK) // S_FALSE = setup simple stepper
