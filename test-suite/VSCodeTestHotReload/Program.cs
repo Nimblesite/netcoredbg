@@ -132,7 +132,10 @@ namespace NetcoreDbgTest.Script
         {
             SetBreakpointsRequest setBreakpointsRequest = new SetBreakpointsRequest();
             setBreakpointsRequest.arguments.source.name = bpFileName;
-            setBreakpointsRequest.arguments.source.path = ControlInfo.SourceFilesPath;
+            // The debuggee is TestAppHotReload, not this test project: DAP binds
+            // source breakpoints by full path, so point at its source file.
+            setBreakpointsRequest.arguments.source.path = Path.GetFullPath(Path.Combine(
+                Path.GetDirectoryName(ControlInfo.SourceFilesPath), "..", "TestAppHotReload", bpFileName));
             foreach (int line in bpNumLines) {
                 setBreakpointsRequest.arguments.lines.Add(line);
                 setBreakpointsRequest.arguments.breakpoints.Add(new SourceBreakpoint(line, null));
